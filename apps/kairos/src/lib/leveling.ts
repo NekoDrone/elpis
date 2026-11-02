@@ -32,6 +32,8 @@ export type CalculateInput = {
     currentExp: number;
     endLevel: number;
     expPerRepeat: number;
+    /** Flat percentage added on top of `expPerRepeat`, e.g. 20 for +20%. */
+    bonusPercent?: number;
 };
 
 export type CalculateError =
@@ -43,20 +45,26 @@ export type CalculateError =
 
 export type CalculateResult =
     | {
-        ok: true;
-        totalExp: number;
-        repeats: number;
-        leftoverExp: number;
-    }
+          ok: true;
+          totalExp: number;
+          repeats: number;
+          leftoverExp: number;
+      }
     | { ok: false; error: CalculateError };
+
+// Rounded so float noise (e.g. 115 * 1.1) can't push a ceil() up by one.
+export const withBonus = (exp: number, bonusPercent: number) =>
+    Math.round(exp * (1 + bonusPercent / 100) * 1e6) / 1e6;
 
 export function calculate({
     table,
     startLevel,
     currentExp,
     endLevel,
-    expPerRepeat,
+    expPerRepeat: baseExpPerRepeat,
+    bonusPercent = 0,
 }: CalculateInput): CalculateResult {
+    const expPerRepeat = withBonus(baseExpPerRepeat, bonusPercent);
     const { expToNext, maxLevel } = table;
     if (!(startLevel >= 1 && startLevel < maxLevel)) {
         return { ok: false, error: "start-out-of-range" };

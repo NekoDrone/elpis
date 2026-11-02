@@ -2,16 +2,20 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ExpTable } from "#/components/exp/Table";
 import { ElpisMark } from "#/components/brand/ElpisMark";
-import { calculate, loadLevelingTable } from "#/lib/leveling";
+import { calculate, loadLevelingTable, withBonus } from "#/lib/leveling";
 import type { CalculateError } from "#/lib/leveling";
 import { Inline } from "#/components/inputs/Inline";
 import { Num } from "#/components/display/Num";
+import { Drawer } from "#/components/containers/Drawer";
+import { BonusPanel } from "#/components/exp/BonusPanel";
+import { BadgePlus } from "lucide-react";
 
 type Search = {
     start?: number;
     exp?: number;
     end?: number;
     per?: number;
+    bonus?: number;
 };
 
 function numberParam(value: unknown): number | undefined {
@@ -27,6 +31,7 @@ export const Route = createFileRoute("/")({
         exp: numberParam(search.exp),
         end: numberParam(search.end),
         per: numberParam(search.per),
+        bonus: numberParam(search.bonus),
     }),
     loader: loadLevelingTable,
     component: Home,
@@ -59,11 +64,17 @@ function Home() {
     const [per, setPer] = useState(
         search.per === undefined ? "" : String(search.per),
     );
+    const [bonus, setBonus] = useState(
+        search.bonus === undefined ? "" : String(search.bonus),
+    );
 
     const startLevel = parseNumber(start);
     const currentExp = parseNumber(exp);
     const endLevel = parseNumber(end);
     const expPerRepeat = parseNumber(per);
+    const bonusPercent = Number.isNaN(parseNumber(bonus))
+        ? 0
+        : parseNumber(bonus);
 
     useEffect(() => {
         const keep = (n: number) => (Number.isFinite(n) ? n : undefined);
@@ -73,10 +84,18 @@ function Home() {
                 exp: keep(currentExp),
                 end: keep(endLevel),
                 per: keep(expPerRepeat),
+                bonus: bonusPercent > 0 ? bonusPercent : undefined,
             },
             replace: true,
         });
-    }, [navigate, startLevel, currentExp, endLevel, expPerRepeat]);
+    }, [
+        navigate,
+        startLevel,
+        currentExp,
+        endLevel,
+        expPerRepeat,
+        bonusPercent,
+    ]);
 
     const result = useMemo(
         () =>
@@ -86,8 +105,9 @@ function Home() {
                 currentExp: Number.isNaN(currentExp) ? 0 : currentExp,
                 endLevel,
                 expPerRepeat,
+                bonusPercent,
             }),
-        [table, startLevel, currentExp, endLevel, expPerRepeat],
+        [table, startLevel, currentExp, endLevel, expPerRepeat, bonusPercent],
     );
 
     return (
@@ -102,83 +122,101 @@ function Home() {
                     </div>
                 </header>
 
-                <form
-                    className="flex flex-col gap-5 rounded-lg bg-elp-g-light-surface p-6 dark:bg-elp-g-dark-surface"
-                    onSubmit={(e) => e.preventDefault()}
+                <Drawer
+                    icon={BadgePlus}
+                    label="Bonuses"
+                    panel={
+                        <BonusPanel
+                            bonus={bonus}
+                            onBonusChange={setBonus}
+                            effectiveExpPerRepeat={
+                                expPerRepeat > 0 && bonusPercent > 0
+                                    ? withBonus(expPerRepeat, bonusPercent)
+                                    : undefined
+                            }
+                        />
+                    }
                 >
-                    <p className="text-xl leading-loose">
-                        <span className="block">
-                            Starting at level{" "}
-                            <Inline
-                                label="Start level"
-                                value={start}
-                                onChange={setStart}
-                                width="w-16"
-                            />
-                            ,
-                        </span>
-                        <span className="block">
-                            getting{" "}
-                            <Inline
-                                label="EXP per repeat"
-                                value={per}
-                                onChange={setPer}
-                                width="w-32"
-                                placeholder="0"
-                            />{" "}
-                            EXP per repeat, you'll need{" "}
-                            <Num>
-                                {result.ok ? format(result.repeats) : "-"}
-                            </Num>{" "}
-                            {result.ok && result.repeats === 1
-                                ? "repeat"
-                                : "repeats"}
-                        </span>
-                        <span className="block">
-                            to reach level{" "}
-                            <Inline
-                                label="End level"
-                                value={end}
-                                onChange={setEnd}
-                                width="w-16"
-                            />
-                            .
-                        </span>
-                    </p>
-
-                    <div
-                        aria-live="polite"
-                        className="flex flex-col gap-3 border-t border-elp-g-light-overlay pt-5 text-sm text-elp-g-light-subtext dark:border-elp-g-dark-overlay dark:text-elp-g-dark-subtext"
+                    <form
+                        className="flex flex-col gap-5 rounded-lg bg-elp-g-light-surface p-6 dark:bg-elp-g-dark-surface"
+                        onSubmit={(e) => e.preventDefault()}
                     >
-                        <label className="flex items-center gap-2">
-                            EXP already earned in your start level
-                            <Inline
-                                label="Current EXP"
-                                value={exp}
-                                onChange={setExp}
-                                width="w-28"
-                                small
-                            />
-                        </label>
-                        {result.ok ? (
-                            <p>
-                                {format(result.totalExp)} EXP in total
-                                {result.leftoverExp > 0 &&
-                                    `, with ${format(result.leftoverExp)} to spare`}
+                        <p className="text-xl leading-loose">
+                            <span className="block">
+                                Starting at level{" "}
+                                <Inline
+                                    label="Start level"
+                                    value={start}
+                                    onChange={setStart}
+                                    width="w-16"
+                                />
+                                ,
+                            </span>
+                            <span className="block">
+                                getting{" "}
+                                <Inline
+                                    label="EXP per repeat"
+                                    value={per}
+                                    onChange={setPer}
+                                    width="w-32"
+                                    placeholder="0"
+                                />{" "}
+                                EXP per repeat, you'll need{" "}
+                                <Num>
+                                    {result.ok ? format(result.repeats) : "-"}
+                                </Num>{" "}
+                                {result.ok && result.repeats === 1
+                                    ? "repeat"
+                                    : "repeats"}
+                            </span>
+                            <span className="block">
+                                to reach level{" "}
+                                <Inline
+                                    label="End level"
+                                    value={end}
+                                    onChange={setEnd}
+                                    width="w-16"
+                                />
                                 .
-                            </p>
-                        ) : (
-                            <p>{ERROR_MESSAGES[result.error]}</p>
-                        )}
-                    </div>
+                            </span>
+                        </p>
 
-                    <ExpTable
-                        table={table}
-                        startLevel={startLevel}
-                        endLevel={endLevel}
-                        currentExp={currentExp}
-                    />
-                </form>
+                        <div
+                            aria-live="polite"
+                            className="flex flex-col gap-3 border-t border-elp-g-light-overlay pt-5 text-sm text-elp-g-light-subtext dark:border-elp-g-dark-overlay dark:text-elp-g-dark-subtext"
+                        >
+                            <label className="flex items-center gap-2">
+                                EXP already earned in your start level
+                                <Inline
+                                    label="Current EXP"
+                                    value={exp}
+                                    onChange={setExp}
+                                    width="w-28"
+                                    small
+                                />
+                            </label>
+                            {result.ok ? (
+                                <p>
+                                    {format(result.totalExp)} EXP in total
+                                    {bonusPercent > 0 &&
+                                        ` (+${format(bonusPercent)}% bonus)`}
+                                    {result.leftoverExp > 0 &&
+                                        `, with ${format(result.leftoverExp)} to spare`}
+                                    .
+                                </p>
+                            ) : (
+                                <p>{ERROR_MESSAGES[result.error]}</p>
+                            )}
+                        </div>
+
+                        <ExpTable
+                            table={table}
+                            startLevel={startLevel}
+                            endLevel={endLevel}
+                            currentExp={currentExp}
+                        />
+                    </form>
+                </Drawer>
             </div>
         </main>
     );
