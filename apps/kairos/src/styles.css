@@ -1,17 +1,71 @@
-
 @import "tailwindcss";
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+@theme {
+    --color-elp-g-dark-canvas: #0a0f0b;
+    --color-elp-g-dark-surface: #0e150f;
+    --color-elp-g-dark-surface-alt: #131c14;
+    --color-elp-g-dark-overlay: #24331f;
+    --color-elp-g-dark-overlay-alt: #33472c;
+    --color-elp-g-dark-subtext: #a7b79e;
+    --color-elp-g-dark-text: #e6eddc;
+    --color-elp-g-dark-positive: #a9d17a;
+    --color-elp-g-dark-negative: #ee8a7d;
+    --color-elp-g-dark-info: #86c3e6;
+    --color-elp-g-dark-warning: #e7c96b;
+}
+
+@theme {
+    --color-elp-g-light-canvas: #e4e9dc;
+    --color-elp-g-light-surface: #f4f6ee;
+    --color-elp-g-light-surface-alt: #ecf0e4;
+    --color-elp-g-light-overlay: #d2dac6;
+    --color-elp-g-light-overlay-alt: #bcc7ae;
+    --color-elp-g-light-subtext: #4f5e48;
+    --color-elp-g-light-text: #17221a;
+    --color-elp-g-light-positive: #336623;
+    --color-elp-g-light-negative: #a0332a;
+    --color-elp-g-light-info: #255d84;
+    --color-elp-g-light-warning: #774f00;
+}
+
+@theme {
+    --color-elp-arc-dark-canvas: #07090f;
+    --color-elp-arc-dark-surface: #0b0e17;
+    --color-elp-arc-dark-surface-alt: #11151f;
+    --color-elp-arc-dark-overlay: #2a3046;
+    --color-elp-arc-dark-overlay-alt: #3a4260;
+    --color-elp-arc-dark-subtext: #a5adc4;
+    --color-elp-arc-dark-text: #eef1fa;
+    --color-elp-arc-dark-positive: #8fd4b0;
+    --color-elp-arc-dark-negative: #f09aae;
+    --color-elp-arc-dark-info: #9fc1ff;
+    --color-elp-arc-dark-warning: #f2c27a;
+}
+
+@theme {
+    --color-elp-arc-light-canvas: #e6e9f2;
+    --color-elp-arc-light-surface: #f7f8fc;
+    --color-elp-arc-light-surface-alt: #eef1f8;
+    --color-elp-arc-light-overlay: #d5dae8;
+    --color-elp-arc-light-overlay-alt: #bec5d9;
+    --color-elp-arc-light-subtext: #4e5672;
+    --color-elp-arc-light-text: #121628;
+    --color-elp-arc-light-positive: #1b664b;
+    --color-elp-arc-light-negative: #a02f4f;
+    --color-elp-arc-light-info: #2a51a6;
+    --color-elp-arc-light-warning: #7a4d00;
 }
 
 html,
 body,
 #app {
-  min-height: 100%;
+    min-height: 100%;
 }
 
 body {
-  margin: 0;
+    margin: 0;
 }
-
