@@ -17,6 +17,22 @@ function useIsWide() {
     );
 }
 
+/**
+ * Wraps `children` with a slide-out side panel.
+ *
+ * On wide viewports (`min-width: 64rem`) the panel slides out from the right
+ * edge of `children` with an icon-only toggle. On narrow viewports it renders
+ * beneath `children` with a labelled toggle and expands vertically. Animations
+ * are disabled when the user prefers reduced motion.
+ *
+ * @param props.icon - Icon component shown in the toggle button.
+ * @param props.label - Accessible name of the toggle button; also its visible
+ * text on narrow viewports.
+ * @param props.children - Main content the drawer is attached to.
+ * @param props.panel - Content displayed inside the drawer panel.
+ * @param props.defaultOpen - Whether the drawer starts open. Defaults to
+ * `false`.
+ */
 export function Drawer({
     icon: Icon,
     label,
