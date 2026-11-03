@@ -45,7 +45,7 @@ export function Drawer({
             aria-expanded={open}
             aria-controls={panelId}
             onClick={() => setOpen((o) => !o)}
-            className="flex items-center justify-center gap-2 rounded-lg bg-elp-g-light-surface p-2 text-sm text-elp-g-light-subtext hover:text-elp-g-light-text lg:h-fit lg:self-start lg:rounded-l-none lg:py-3 dark:bg-elp-g-dark-surface dark:text-elp-g-dark-subtext dark:hover:text-elp-g-dark-text"
+            className="flex items-center justify-center gap-2 rounded-lg bg-elp-arc-light-surface p-2 text-sm text-elp-arc-light-subtext hover:text-elp-arc-light-text lg:h-fit lg:self-start lg:rounded-l-none lg:py-3 dark:bg-elp-arc-dark-surface dark:text-elp-arc-dark-subtext dark:hover:text-elp-arc-dark-text"
         >
             <Icon aria-hidden size={18} />
             {!wide && <span>{label}</span>}
@@ -53,7 +53,7 @@ export function Drawer({
     );
 
     const panelClass =
-        "rounded-lg bg-elp-g-light-surface p-5 lg:rounded-l-none dark:bg-elp-g-dark-surface";
+        "rounded-lg bg-elp-arc-light-surface p-5 lg:overflow-y-auto lg:rounded-l-none dark:bg-elp-arc-dark-surface";
 
     return (
         <div className="relative">

@@ -15,13 +15,13 @@ export function Accordion({
     const panelId = useId();
 
     return (
-        <div className="border-t border-elp-g-light-overlay pt-4 dark:border-elp-g-dark-overlay">
+        <div className="border-t border-elp-arc-light-overlay pt-4 dark:border-elp-arc-dark-overlay">
             <button
                 type="button"
                 aria-expanded={open}
                 aria-controls={panelId}
                 onClick={() => setOpen((o) => !o)}
-                className="flex w-full items-center justify-between gap-2 text-left text-sm text-elp-g-light-subtext hover:text-elp-g-light-text dark:text-elp-g-dark-subtext dark:hover:text-elp-g-dark-text"
+                className="flex w-full items-center justify-between gap-2 text-left text-sm text-elp-arc-light-subtext hover:text-elp-arc-light-text dark:text-elp-arc-dark-subtext dark:hover:text-elp-arc-dark-text"
             >
                 <span>{title}</span>
                 <ChevronDown

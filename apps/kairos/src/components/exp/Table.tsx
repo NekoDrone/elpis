@@ -6,7 +6,7 @@ const format = (n: number) => n.toLocaleString("en-US");
 
 const cell = "px-4 py-1.5";
 const rowBorder =
-    "border-t border-elp-g-light-overlay dark:border-elp-g-dark-overlay";
+    "border-t border-elp-arc-light-overlay dark:border-elp-arc-dark-overlay";
 
 /**
  * Levels from `start` up to (not including) `end` are the ones whose EXP counts
@@ -54,14 +54,14 @@ export function ExpTable({
     return (
         <Accordion title="See breakdown">
             <div className="flex flex-col gap-3">
-                <p className="text-sm text-elp-g-light-subtext dark:text-elp-g-dark-subtext">
+                <p className="text-sm text-elp-arc-light-subtext dark:text-elp-arc-dark-subtext">
                     {range
                         ? `EXP needed from level ${first} to level ${last + 1}.`
                         : `EXP needed to go from each level to the next. Enter a valid start and end level to narrow this down.`}
                 </p>
-                <div className="max-h-80 overflow-auto rounded-md border border-elp-g-light-overlay dark:border-elp-g-dark-overlay">
+                <div className="max-h-80 overflow-auto rounded-md border border-elp-arc-light-overlay dark:border-elp-arc-dark-overlay">
                     <table className="w-full text-sm tabular-nums">
-                        <thead className="sticky top-0 bg-elp-g-light-surface text-left text-elp-g-light-subtext dark:bg-elp-g-dark-surface dark:text-elp-g-dark-subtext">
+                        <thead className="sticky top-0 bg-elp-arc-light-surface text-left text-elp-arc-light-subtext dark:bg-elp-arc-dark-surface dark:text-elp-arc-dark-subtext">
                             <tr>
                                 <th className={`${cell} font-medium`}>Level</th>
                                 <th
@@ -87,7 +87,7 @@ export function ExpTable({
                                     <tr className={rowBorder}>
                                         <td className={cell}>Already earned</td>
                                         <td
-                                            className={`${cell} text-right text-elp-g-light-subtext dark:text-elp-g-dark-subtext`}
+                                            className={`${cell} text-right text-elp-arc-light-subtext dark:text-elp-arc-dark-subtext`}
                                         >
                                             −{format(earned)}
                                         </td>
@@ -96,7 +96,7 @@ export function ExpTable({
                                 <tr className={`${rowBorder} font-semibold`}>
                                     <td className={cell}>Total required</td>
                                     <td
-                                        className={`${cell} text-right text-elp-g-light-positive dark:text-elp-g-dark-positive`}
+                                        className={`${cell} text-right text-elp-arc-light-positive dark:text-elp-arc-dark-positive`}
                                     >
                                         {format(total)}
                                     </td>
@@ -105,14 +105,14 @@ export function ExpTable({
                         )}
                     </table>
                 </div>
-                <p className="text-xs text-elp-g-light-subtext dark:text-elp-g-dark-subtext">
+                <p className="text-xs text-elp-arc-light-subtext dark:text-elp-arc-dark-subtext">
                     The value at max level ({table.maxLevel}) is a placeholder.
                     Source data can be found at{" "}
                     <a
                         href={LEVELING_CSV_REPO_URL}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-elp-g-light-info underline underline-offset-4 dark:text-elp-g-dark-info"
+                        className="text-elp-arc-light-info underline underline-offset-4 dark:text-elp-arc-dark-info"
                     >
                         leveling.csv
                     </a>

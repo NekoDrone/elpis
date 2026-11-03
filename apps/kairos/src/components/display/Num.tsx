@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export const Num = ({ children }: { children: ReactNode }) => {
     return (
-        <strong className="font-semibold text-elp-g-light-positive tabular-nums dark:text-elp-g-dark-positive">
+        <strong className="font-semibold text-elp-arc-light-info tabular-nums dark:text-elp-arc-dark-info">
             {children}
         </strong>
     );
