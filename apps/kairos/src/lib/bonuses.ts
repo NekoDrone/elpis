@@ -1,26 +1,68 @@
-export type Bonus = { id: string; label: string; percent: number };
+export type Bonus = {
+    id: string;
+    label: string;
+    percent: number;
+    info?: string;
+};
 export type BonusCategory = { title: string; bonuses: Bonus[] };
+
+const MANUALS_INFO =
+    "Engineering and Survival manuals, purchasable with Scrips or GC Seals.";
+const FC_ACTION_INFO =
+    "\u201cHelping Hand\u201d or \u201cEarth and Water\u201d, enacted via Free Company Actions.";
+const ARMOURY_INFO = "Any job below your highest level job gains this bonus.";
 
 export const BONUS_CATEGORIES: BonusCategory[] = [
     {
         title: "DoH/DoL",
         bonuses: [
-            { id: "manual-full", label: "Manuals (Full)", percent: 150 },
-            { id: "manual-half", label: "Manuals (Half)", percent: 75 },
+            {
+                id: "manual-full",
+                label: "Manuals (Full)",
+                percent: 150,
+                info: MANUALS_INFO,
+            },
+            {
+                id: "manual-half",
+                label: "Manuals (Half)",
+                percent: 75,
+                info: MANUALS_INFO,
+            },
             { id: "squadron-manual", label: "Squadron Manual", percent: 20 },
-            { id: "fc-action-1", label: "FC Action I", percent: 5 },
-            { id: "fc-action-2", label: "FC Action II", percent: 10 },
-            { id: "fc-action-3", label: "FC Action III", percent: 20 },
+            {
+                id: "fc-action-1",
+                label: "FC Action I",
+                percent: 5,
+                info: FC_ACTION_INFO,
+            },
+            {
+                id: "fc-action-2",
+                label: "FC Action II",
+                percent: 10,
+                info: FC_ACTION_INFO,
+            },
+            {
+                id: "fc-action-3",
+                label: "FC Action III",
+                percent: 20,
+                info: FC_ACTION_INFO,
+            },
         ],
     },
     {
         title: "DoW/DoM",
         bonuses: [
-            { id: "armoury-1-89", label: "Armoury (1-89)", percent: 100 },
+            {
+                id: "armoury-1-89",
+                label: "Armoury (1-89)",
+                percent: 100,
+                info: ARMOURY_INFO,
+            },
             {
                 id: "armoury-90-100",
                 label: "Armoury (90-100)",
                 percent: 50,
+                info: ARMOURY_INFO,
             },
             { id: "heat-of-battle-1", label: "Heat of Battle I", percent: 5 },
             { id: "heat-of-battle-2", label: "Heat of Battle II", percent: 10 },
@@ -39,6 +81,7 @@ export const BONUS_CATEGORIES: BonusCategory[] = [
                 id: "earring",
                 label: "Earring",
                 percent: 30,
+                info: "Either the Pre-order bonus (up to level 90; Azeyma's) or the Adventurer's Supply Kit (up to level 80; Menphina's).",
             },
             {
                 id: "friendship-circlet",
@@ -49,11 +92,13 @@ export const BONUS_CATEGORIES: BonusCategory[] = [
                 id: "brand-new-ring",
                 label: "Brand-new Ring",
                 percent: 30,
+                info: "Up to level 30.",
             },
             {
                 id: "neophyte-ring",
                 label: "Neophyte's Ring",
                 percent: 30,
+                info: "Up to level 60.",
             },
             { id: "road-to-90", label: "Road to 90", percent: 100 },
             {

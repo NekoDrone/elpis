@@ -1,4 +1,6 @@
+import { Tooltip } from "#/components/containers/Tooltip";
 import { Inline } from "#/components/inputs/Inline";
+import { Info } from "lucide-react";
 import { BONUS_CATEGORIES } from "#/lib/bonuses";
 
 const format = (n: number) => n.toLocaleString("en-US");
@@ -44,15 +46,26 @@ export function BonusPanel({
                     {category.bonuses.map((b) => (
                         <label
                             key={b.id}
-                            className="flex cursor-pointer items-start gap-2 text-sm"
+                            className="flex cursor-pointer items-center gap-2 text-sm"
                         >
                             <input
                                 type="checkbox"
                                 checked={checked.has(b.id)}
                                 onChange={() => onToggle(b.id)}
-                                className="mt-1 accent-elp-arc-light-positive dark:accent-elp-arc-dark-positive"
+                                className="accent-elp-arc-light-positive dark:accent-elp-arc-dark-positive"
                             />
                             <span className="flex-1">{b.label}</span>
+                            {b.info && (
+                                <Tooltip content={b.info} side="top">
+                                    <button
+                                        type="button"
+                                        aria-label={`About ${b.label}`}
+                                        className={`flex hover:text-elp-arc-light-text dark:hover:text-elp-arc-dark-text ${muted}`}
+                                    >
+                                        <Info aria-hidden size={14} />
+                                    </button>
+                                </Tooltip>
+                            )}
                             <span className={`tabular-nums ${muted}`}>
                                 {b.percent}%
                             </span>
