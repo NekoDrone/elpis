@@ -144,8 +144,13 @@ function Home() {
         [table, startLevel, currentExp, endLevel, expPerRepeat, bonusPercent],
     );
 
+    const title = result.ok
+        ? `Kairos - ${format(result.repeats)} ${result.repeats === 1 ? "repeat" : "repeats"} from ${startLevel} to ${endLevel}`
+        : "Kairos - FFXIV Leveling Calculator";
+
     return (
         <main className="min-h-screen bg-elp-arc-light-canvas px-4 py-10 text-elp-arc-light-text dark:bg-elp-arc-dark-canvas dark:text-elp-arc-dark-text">
+            <title>{title}</title>
             <div className="mx-auto flex max-w-md flex-col gap-6">
                 <header className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
