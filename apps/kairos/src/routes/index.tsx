@@ -9,6 +9,7 @@ import { Num } from "#/components/display/Num";
 import { Drawer } from "#/components/containers/Drawer";
 import { BonusPanel } from "#/components/exp/BonusPanel";
 import { BadgePlus } from "lucide-react";
+import { BONUSES_BY_ID } from "#/lib/bonuses";
 
 type Search = {
     start?: number;
@@ -16,6 +17,7 @@ type Search = {
     end?: number;
     per?: number;
     bonus?: number;
+    bonuses?: string;
 };
 
 function numberParam(value: unknown): number | undefined {
@@ -32,6 +34,10 @@ export const Route = createFileRoute("/")({
         end: numberParam(search.end),
         per: numberParam(search.per),
         bonus: numberParam(search.bonus),
+        bonuses:
+            typeof search.bonuses === "string" && search.bonuses !== ""
+                ? search.bonuses
+                : undefined,
     }),
     loader: loadLevelingTable,
     component: Home,
@@ -68,6 +74,15 @@ function Home() {
         search.bonus === undefined ? "" : String(search.bonus),
     );
 
+    const [checked, setChecked] = useState<ReadonlySet<string>>(
+        () =>
+            new Set(
+                (search.bonuses ?? "")
+                    .split(",")
+                    .filter((id) => BONUSES_BY_ID.has(id)),
+            ),
+    );
+
     const startLevel = parseNumber(start);
     const currentExp = parseNumber(exp);
     const endLevel = parseNumber(end);
@@ -75,6 +90,23 @@ function Home() {
     const bonusPercent = Number.isNaN(parseNumber(bonus))
         ? 0
         : parseNumber(bonus);
+    const checkedIds = [...checked].sort().join(",");
+
+    const toggleBonus = (id: string) => {
+        const entry = BONUSES_BY_ID.get(id);
+        if (!entry) return;
+        const on = !checked.has(id);
+        const next = new Set(checked);
+        if (on) next.add(id);
+        else next.delete(id);
+        setChecked(next);
+        const current = Number.isNaN(parseNumber(bonus))
+            ? 0
+            : parseNumber(bonus);
+        const sum =
+            Math.round((current + (on ? 1 : -1) * entry.percent) * 1e6) / 1e6;
+        setBonus(String(Math.max(0, sum)));
+    };
 
     useEffect(() => {
         const keep = (n: number) => (Number.isFinite(n) ? n : undefined);
@@ -85,6 +117,7 @@ function Home() {
                 end: keep(endLevel),
                 per: keep(expPerRepeat),
                 bonus: bonusPercent > 0 ? bonusPercent : undefined,
+                bonuses: checkedIds === "" ? undefined : checkedIds,
             },
             replace: true,
         });
@@ -95,6 +128,7 @@ function Home() {
         endLevel,
         expPerRepeat,
         bonusPercent,
+        checkedIds,
     ]);
 
     const result = useMemo(
@@ -111,7 +145,7 @@ function Home() {
     );
 
     return (
-        <main className="min-h-screen bg-elp-g-light-canvas px-4 py-10 text-elp-g-light-text dark:bg-elp-g-dark-canvas dark:text-elp-g-dark-text">
+        <main className="min-h-screen bg-elp-arc-light-canvas px-4 py-10 text-elp-arc-light-text dark:bg-elp-arc-dark-canvas dark:text-elp-arc-dark-text">
             <div className="mx-auto flex max-w-md flex-col gap-6">
                 <header className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
@@ -129,16 +163,17 @@ function Home() {
                         <BonusPanel
                             bonus={bonus}
                             onBonusChange={setBonus}
-                            effectiveExpPerRepeat={
-                                expPerRepeat > 0 && bonusPercent > 0
-                                    ? withBonus(expPerRepeat, bonusPercent)
-                                    : undefined
-                            }
+                            checked={checked}
+                            onToggle={toggleBonus}
+                            effectiveExpPerRepeat={withBonus(
+                                expPerRepeat > 0 ? expPerRepeat : 0,
+                                bonusPercent,
+                            )}
                         />
                     }
                 >
                     <form
-                        className="flex flex-col gap-5 rounded-lg bg-elp-g-light-surface p-6 dark:bg-elp-g-dark-surface"
+                        className="flex flex-col gap-5 rounded-lg bg-elp-arc-light-surface p-6 dark:bg-elp-arc-dark-surface"
                         onSubmit={(e) => e.preventDefault()}
                     >
                         <p className="text-xl leading-loose">
@@ -183,7 +218,7 @@ function Home() {
 
                         <div
                             aria-live="polite"
-                            className="flex flex-col gap-3 border-t border-elp-g-light-overlay pt-5 text-sm text-elp-g-light-subtext dark:border-elp-g-dark-overlay dark:text-elp-g-dark-subtext"
+                            className="flex flex-col gap-3 border-t border-elp-arc-light-overlay pt-5 text-sm text-elp-arc-light-subtext dark:border-elp-arc-dark-overlay dark:text-elp-arc-dark-subtext"
                         >
                             <label className="flex items-center gap-2">
                                 EXP already earned in your start level
